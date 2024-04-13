@@ -1,8 +1,20 @@
-// Create a function getComputerChoice which chooses R, P, or S randomly for computer
+let playerScore = 0,
+    computerScore = 0,
+    roundNumber = 1;
+
+const buttons = document.querySelectorAll(".button");
+
+buttons.forEach((button) => {
+    button.addEventListener("click", buttonHandler);
+})
+
+function buttonHandler(e) {
+    playGame(e.target.textContent.toLowerCase(), getComputerChoice())
+}
+
+// Create a function which chooses R, P, or S randomly for computer
 function getComputerChoice() {
-    // Generate a random number out of three possibilities
     let randomNum = Math.floor(Math.random() * 3)
-    // Return rock, paper, or scissors depending on this number
     if (randomNum === 0) {
         return "rock"
     }
@@ -15,55 +27,43 @@ function getComputerChoice() {
 }
 
 // Create a function that computes the result of a single round of RPS using player
-// & computer input
-function playRound(playerSelection, computerSelection) {
-    // playerSelection needs to be case-insensitive. Make the string lower case.
-    playerSelection = playerSelection.toLowerCase()
-    // If equal, it's a tie. Do not increment either score. Show result.
+// & computer input and displays the result on page
+function playGame(playerSelection, computerSelection) {
+    playerSelection = playerSelection.toLowerCase();
+    const resultsDisplay = document.querySelector(".results");
+    const result = document.createElement("p");
+    const score = document.createElement("p");
     if (playerSelection === computerSelection) {
-        return `This round is a tie between ${playerSelection} and ${computerSelection}!`
+        result.textContent = `You chose ${playerSelection} and the computer chose ${computerSelection}. This round is a tie!`
     }
-    // If player wins, increment player score and show result of round.
     else if ((playerSelection === `rock` && computerSelection === `scissors`) ||
         (playerSelection === `paper` && computerSelection === `rock`) ||
         (playerSelection === `scissors` && computerSelection === `paper`)) {
-            playerScore += 1;
-            return `You win this round! Your ${playerSelection} beats the computer's ${computerSelection}!`
+        playerScore += 1;
+        result.textContent = `You chose ${playerSelection} and the computer chose ${computerSelection}. You win this round!`;
         }
-    // If computer wins, increment computer score and show result of round.
     else {
         computerScore += 1;
-        return `You lose this round. The computer's ${computerSelection} beats your ${playerSelection}.`
+        result.textContent = `You chose ${playerSelection} and the computer chose ${computerSelection}. You lose this round.`;
+    };
+    score.textContent = `Player score: ${playerScore} --- Computer score: ${computerScore}`;
+    resultsDisplay.appendChild(result);
+    resultsDisplay.appendChild(score);
+    if (roundNumber == 5) {
+        const winnerDisplay = document.createElement("p");
+        if (playerScore > computerScore) {
+            winnerDisplay.textContent = `You won the game!`
+        }
+        else if (playerScore < computerScore) {
+            winnerDisplay.textContent = `The computer wins the game.`
+        }
+        else {
+            winnerDisplay.textContent = `The winner is... no one! The scores are tied.`
+        }
+        resultsDisplay.appendChild(winnerDisplay);
+        buttons.forEach((button) => {
+            button.removeEventListener("click", buttonHandler)
+        })
     }
+    roundNumber += 1;
 }
-
-// Create a function that plays a full five rounds of RPS using the above function
-function playGame() {
-    // Play five rounds and log result of each round
-    console.log(playRound(prompt(`Choose rock, paper, or scissors: `, ``), getComputerChoice()))
-    console.log(`Player score: ${playerScore} --- Computer score: ${computerScore}`)
-    console.log(playRound(prompt(`Choose rock, paper, or scissors: `, ``), getComputerChoice()))
-    console.log(`Player score: ${playerScore} --- Computer score: ${computerScore}`)
-    console.log(playRound(prompt(`Choose rock, paper, or scissors: `, ``), getComputerChoice()))
-    console.log(`Player score: ${playerScore} --- Computer score: ${computerScore}`)
-    console.log(playRound(prompt(`Choose rock, paper, or scissors: `, ``), getComputerChoice()))
-    console.log(`Player score: ${playerScore} --- Computer score: ${computerScore}`)
-    console.log(playRound(prompt(`Choose rock, paper, or scissors: `, ``), getComputerChoice()))
-    console.log(`Player score: ${playerScore} --- Computer score: ${computerScore}`)
-    // Annonce winner at the end of five rounds
-    if (playerScore === computerScore) {
-        console.log(`It's a tie!`)
-    }
-    else if (playerScore > computerScore) {
-        console.log(`You win the game!`)
-    }
-    else {
-        console.log(`You lose the game.`)
-    }
-}
-
-// Set both player and computer score to zero, and begin game.
-let playerScore = 0;
-let computerScore = 0;
-console.log(`It's a best of five rock paper scissors match against the computer!`)
-playGame()

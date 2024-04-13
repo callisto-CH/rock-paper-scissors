@@ -1,3 +1,3 @@
 # rock-paper-scissors
-A game of rock, paper, scissors to be played in the browser's JavaScript console.
+A best-of-five game of rock paper scissors.
 Created for The Odin Project.
